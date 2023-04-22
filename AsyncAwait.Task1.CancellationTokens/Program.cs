@@ -9,6 +9,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AsyncAwait.Task1.CancellationTokens;
 
@@ -49,24 +50,24 @@ internal class Program
         Console.ReadLine();
     }
 
-    private static async void CalculateSum(int n)
+    private static void CalculateSum(int n)
     {
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource = new CancellationTokenSource();
 
-        var task = Calculator.Calculate(n, _cancellationTokenSource.Token);
-        Console.WriteLine($"The task for {n} started... Enter N to cancel the request:");
-
-        try
+        Task.Run(async () => 
         {
+            var task = Calculator.Calculate(n, _cancellationTokenSource.Token);
+            Console.WriteLine($"The task for {n} started... Enter N to cancel the request:");
             var sum = await task;
             Console.WriteLine($"Sum for {n} = {sum}.");
             Console.WriteLine();
             Console.WriteLine("Enter N: ");
-        }
-        catch (OperationCanceledException)
-        {
-            Console.WriteLine($"Sum for {n} cancelled...");
-        }
+
+        },_cancellationTokenSource.Token)
+        .ContinueWith((antecedent, n) => 
+        { 
+            Console.WriteLine($"Sum for {n} cancelled..."); 
+        }, n, TaskContinuationOptions.OnlyOnCanceled);
     }
 }
