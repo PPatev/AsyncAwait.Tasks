@@ -1,0 +1,44 @@
+
+1) What is the Async programming in C#?
+
+The core of async programming is the Task and Task<T> objects, which model asynchronous operations. 
+They are supported by the async and await keywords. The model is fairly simple in most cases:
+- For I/O-bound code, you await an operation that returns a Task or Task<T> inside of an async method.
+- For CPU-bound code, you await an operation that is started on a background thread with the Task.Run method.
+
+The await keyword yields control to the caller of the method that performed await, 
+and it ultimately allows a UI to be responsive or a service to be elastic. 
+
+2) What are the key operators that are used for asynchronous operation? 
+
+Async - specify that a method, lambda expression, or anonymous method is asynchronous.
+Await - suspends evaluation of the enclosing async method until the asynchronous operation represented by its operand completes.
+When the asynchronous operation completes, the await operator returns the result of the operation, if any. 
+
+3) If you mark a method with the async keyword, does this mean that the method is executed asynchronously?
+
+No.To be executed asynchronously a method must contain an await expression. 
+Async signals to the compiler that the method can be awaited and the compiler creates a state machine for the method.
+
+4) What Asynchronous programming patterns do you know?
+
+ - Task-based asynchronous pattern (TAP) - based on Task and Task<TResult>.
+ TAP uses a single method to represent the initiation and completion of an asynchronous operation. 
+ Asynchronous methods in TAP include the Async suffix after the operation name for methods that return awaitable types, 
+ such as Task, Task<TResult>, ValueTask, and ValueTask<TResult>.
+ - Event-based asynchronous pattern - prescribes one way for classes to present asynchronous behavior.
+ A class that supports the Event-based Asynchronous Pattern will have one or more methods named MethodNameAsync. 
+ These methods may mirror synchronous versions, which perform the same operation on the current thread. 
+ The class may also have a MethodNameCompleted event and it may have a MethodNameAsyncCancel (or simply CancelAsync) method.
+- Asynchronous programming model (APM) - asynchronous operations are implemented as two methods named BeginOperationName and EndOperationName
+After calling BeginOperationName, an application can continue executing instructions on the calling thread while the asynchronous operation takes place on a different thread. 
+For each call to BeginOperationName, the application should also call EndOperationName to get the results of the operation.
+
+5) Can a method contain multiple “await” key operators?
+
+Yes.
+
+6) What types can be returned?
+
+Task, Task<Tresult>, ValueTask, ValueTask<TResult>, void (for event handlers), IAsyncEnumerable<T>
+and any type that has an accessible GetAwater method hat returns an instance of an awaiter type.
