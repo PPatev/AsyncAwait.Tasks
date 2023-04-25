@@ -1,5 +1,4 @@
-﻿using AsyncAwait.Task2.CodeReviewChallenge.Extensions;
-using AsyncAwait.Task2.CodeReviewChallenge.Models.Support;
+﻿using AsyncAwait.Task2.CodeReviewChallenge.Models.Support;
 using AsyncAwait.Task2.CodeReviewChallenge.Services;
 using CloudServices;
 using CloudServices.Interfaces;
@@ -34,6 +33,7 @@ public class Startup
         services.AddSingleton<ISupportService, CloudSupportService>();
         services.AddSingleton<IPrivacyDataService, PrivacyDataService>();
         services.AddScoped<IAssistant, ManualAssistant>();
+        services.AddScoped<ICloudService, CloudService>();
 
         services.AddMvc(options => options.EnableEndpointRouting = false);
     }
@@ -45,7 +45,7 @@ public class Startup
             app.UseDeveloperExceptionPage();
         app.UseExceptionHandler("/Home/Error");
 
-        app.UseStatistic();
+        //app.UseStatistic();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();

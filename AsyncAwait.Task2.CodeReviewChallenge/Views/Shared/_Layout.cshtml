@@ -1,6 +1,7 @@
 ﻿@using AsyncAwait.Task2.CodeReviewChallenge.Headers
 @{
-    string visitsCount = Context.Response.Headers[CustomHttpHeaders.TotalPageVisits];
+    //string visitsCount = Context.Response.Headers[CustomHttpHeaders.TotalPageVisits];
+    string visitsCount = ViewBag.VisitsCount;
 }
 <!DOCTYPE html>
 <html>

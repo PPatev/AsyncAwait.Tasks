@@ -13,27 +13,38 @@ public class HomeController : Controller
     private readonly IAssistant _assistant;
 
     private readonly IPrivacyDataService _privacyDataService;
+    private readonly ICloudService _cloudService;
 
-    public HomeController(IAssistant assistant, IPrivacyDataService privacyDataService)
+    public HomeController(IAssistant assistant, IPrivacyDataService privacyDataService, ICloudService cloudService)
     {
         _assistant = assistant ?? throw new ArgumentNullException(nameof(assistant));
         _privacyDataService = privacyDataService ?? throw new ArgumentNullException(nameof(privacyDataService));
+        _cloudService = cloudService ?? throw new ArgumentNullException(nameof(cloudService)); 
     }
 
-    public ActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var visitsCount = await _cloudService.GetVisitsCountAsync(HttpContext.Request.Path);
+        ViewBag.VisitsCount = visitsCount.ToString();
+
         return View();
     }
 
-    public ActionResult Privacy()
+    public async Task<IActionResult> Privacy()
     {
-        ViewBag.Message = _privacyDataService.GetPrivacyDataAsync().Result;
+        var visitsCount = await _cloudService.GetVisitsCountAsync(HttpContext.Request.Path);
+        ViewBag.VisitsCount = visitsCount.ToString();
+        ViewBag.Message = _privacyDataService.GetPrivacyData();
+
         return View();
     }
 
     public async Task<IActionResult> Help()
     {
+        var visitsCount = await _cloudService.GetVisitsCountAsync(HttpContext.Request.Path);
+        ViewBag.VisitsCount = visitsCount.ToString();
         ViewBag.RequestInfo = await _assistant.RequestAssistanceAsync("guest").ConfigureAwait(false);
+
         return View();
     }
 
