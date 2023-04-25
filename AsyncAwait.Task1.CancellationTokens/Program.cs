@@ -54,17 +54,26 @@ internal class Program
     {
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource = new CancellationTokenSource();
+        var token = _cancellationTokenSource.Token;
 
         Task.Run(async () => 
         {
-            var task = Calculator.Calculate(n, _cancellationTokenSource.Token);
+            var task = Calculator.Calculate(n, token);
             Console.WriteLine($"The task for {n} started... Enter N to cancel the request:");
             var sum = await task;
-            Console.WriteLine($"Sum for {n} = {sum}.");
-            Console.WriteLine();
-            Console.WriteLine("Enter N: ");
 
-        },_cancellationTokenSource.Token)
+            if (token.IsCancellationRequested)
+            {
+                Console.WriteLine($"Sum for {n} cancelled...");
+            }
+            else 
+            {
+                Console.WriteLine($"Sum for {n} = {sum}.");
+                Console.WriteLine();
+                Console.WriteLine("Enter N: ");
+            }
+
+        }, token)
         .ContinueWith((antecedent, n) => 
         { 
             Console.WriteLine($"Sum for {n} cancelled..."); 

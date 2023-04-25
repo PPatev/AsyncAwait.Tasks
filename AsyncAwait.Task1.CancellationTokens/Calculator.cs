@@ -14,7 +14,10 @@ internal static class Calculator
 
             for (var i = 0; i < n; i++)
             {
-                token.ThrowIfCancellationRequested();
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
 
                 // i + 1 is to allow 2147483647 (Max(Int32)) 
                 sum = sum + (i + 1);
